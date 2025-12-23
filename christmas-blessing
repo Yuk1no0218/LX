@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 平安夜祝福 🎄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #ff6b6b);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 雪花动画 */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 祝福弹窗 */
+        .modal {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: modalShow 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes modalShow {
+            from {
+                opacity: 0;
+                transform: scale(0.5) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .christmas-tree {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .blessing-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .personal-blessing {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, #ffeaa7, #fab1a0);
+            border-radius: 15px;
+            color: #2d3436;
+            font-weight: bold;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .music-note {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            .modal {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .christmas-tree {
+                font-size: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 雪花 -->
+    <div id="snowflakes"></div>
+    
+    <!-- 音符装饰 -->
+    <div class="music-note" style="top: 10%; left: 10%;">🎵</div>
+    <div class="music-note" style="top: 20%; right: 15%; animation-delay: -1s;">🎶</div>
+    <div class="music-note" style="bottom: 20%; left: 20%; animation-delay: -2s;">🎵</div>
+    <div class="music-note" style="bottom: 15%; right: 10%; animation-delay: -3s;">🎶</div>
+
+    <div class="container">
+        <div class="modal">
+            <div class="christmas-tree">🎄</div>
+            <h1>平安夜快乐</h1>
+            <div class="blessing-text">
+                愿你的平安夜充满温馨与喜悦，<br>
+                愿圣诞树上挂满我的祝福，<br>
+                愿新的一年里平安喜乐，<br>
+                万事如意！✨
+            </div>
+            
+            <button class="btn" onclick="showBlessing()" style="width: 100%; margin: 10px 0;">
+                查看脆脆虾的专属祝福 ✨
+            </button>
+            
+            <div class="personal-blessing" id="personalBlessing">
+                <div id="blessingContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建雪花效果
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            const container = document.getElementById('snowflakes');
+            
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.animationDelay = Math.random() * 2 + 's';
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                container.appendChild(snowflake);
+            }
+        }
+
+        // 显示脆脆虾的专属祝福
+        function showBlessing() {
+            const name = "脆脆虾";
+            const blessings = [
+                `亲爱的${name}，在这个温馨的平安夜，愿圣诞老人把我的祝福装进你的袜子里，带给你一整年的平安与快乐！🎅✨`,
+                `${name}你好！愿平安夜的钟声带走你所有的烦恼，愿圣诞树的彩灯照亮你前行的路，祝你节日快乐！🌟🎄`,
+                `致${name}：平安夜里道平安，愿你身体健康如牛犊，工作顺利步步高，爱情甜蜜蜜罐罐！💕🎁`,
+                `亲爱的${name}，愿这个平安夜像热巧克力一样温暖你的心，像圣诞歌曲一样愉悦你的耳朵！🍫🎵`,
+                `嗨${name}！在这美好的平安夜，愿你的笑容比星光更灿烂，愿你的幸福比雪花更纯洁！🎊⭐`,
+                `${name}宝贝，平安夜到了，愿你的生活像圣诞树一样绚烂多彩，愿你的心情像铃铛声一样清脆悦耳！🔔🌟`
+            ];
+            
+            const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
+            document.getElementById('blessingContent').innerHTML = randomBlessing;
+            document.getElementById('personalBlessing').style.display = 'block';
+            
+            // 滚动到祝福内容
+            setTimeout(() => {
+                document.getElementById('personalBlessing').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 300);
+        }
+
+        // 页面加载完成后自动显示祝福（可选）
+        window.onload = function() {
+            createSnowflakes();
+            
+            // 3秒后自动显示祝福（可选功能，可以注释掉）
+            // setTimeout(() => {
+            //     showBlessing();
+            // }, 3000);
+        };
+    </script>
+</body>
+</html>
