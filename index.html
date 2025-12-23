@@ -155,14 +155,14 @@
             transform: translateY(0);
         }
 
-        /* 全屏祝福弹窗 */
-        .full-screen-blessing {
+        /* 多弹窗样式 */
+        .blessing-popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -172,52 +172,117 @@
             transition: all 0.5s ease;
         }
 
-        .full-screen-blessing.show {
+        .blessing-popup.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .blessing-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 80%;
-            max-height: 80%;
+        .blessing-card {
+            background: linear-gradient(135deg, #fff, #f8f9fa);
+            padding: 40px 35px;
+            border-radius: 25px;
+            max-width: 85%;
+            max-height: 85%;
             overflow-y: auto;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transform: scale(0.8);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7) rotate(-3deg);
             opacity: 0;
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            border: 3px solid #ff6b6b;
         }
 
-        .full-screen-blessing.show .blessing-content {
-            transform: scale(1);
+        .blessing-popup.active .blessing-card {
+            transform: scale(1) rotate(0deg);
             opacity: 1;
         }
 
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 30px;
-            cursor: pointer;
+        .blessing-header {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
         }
 
         .blessing-title {
             color: #ff6b6b;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 25px;
+            font-weight: bold;
         }
 
-        .blessing-text-full {
+        .blessing-message {
             color: #333;
             line-height: 1.8;
-            font-size: 18px;
+            font-size: 17px;
             margin-bottom: 30px;
+            white-space: pre-line;
+        }
+
+        .blessing-footer {
+            color: #666;
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-popup:hover {
+            color: #ff6b6b;
+        }
+
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: #ff6b6b;
+            transform: scale(1.2);
         }
 
         /* 响应式调整 */
@@ -232,6 +297,23 @@
             
             .christmas-tree {
                 font-size: 50px;
+            }
+            
+            .blessing-card {
+                padding: 30px 25px;
+                max-width: 90%;
+            }
+            
+            .blessing-header {
+                font-size: 40px;
+            }
+            
+            .blessing-title {
+                font-size: 20px;
+            }
+            
+            .blessing-message {
+                font-size: 16px;
             }
         }
     </style>
@@ -255,27 +337,69 @@
                 万事如意！✨
             </div>
             
-            <button class="btn" onclick="showFullBlessing()">
-                查看脆脆虾的专属祝福 ✨
+            <button class="btn" onclick="openBlessingSlider()">
+                开启脆脆虾的祝福之旅 ✨
             </button>
         </div>
     </div>
 
-    <!-- 全屏祝福弹窗 -->
-    <div class="full-screen-blessing" id="fullScreenBlessing">
-        <button class="close-btn" onclick="hideFullBlessing()">&times;</button>
-        <div class="blessing-content">
-            <div class="blessing-title">脆脆虾的专属祝福</div>
-            <div class="blessing-text-full" id="blessingTextFull"></div>
+    <!-- 祝福弹窗容器 -->
+    <div class="blessing-popup" id="blessingPopup">
+        <div class="blessing-card">
+            <button class="close-popup" onclick="closeBlessingSlider()">&times;</button>
+            <div class="blessing-header" id="blessingIcon">🎄</div>
+            <div class="blessing-title" id="blessingTitle">脆脆虾的专属祝福</div>
+            <div class="blessing-message" id="blessingMessage"></div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="prevBlessing()">上一条 ⬅️</button>
+                <button class="nav-btn" onclick="nextBlessing()">下一条 ➡️</button>
+            </div>
+            <div class="progress-dots" id="progressDots"></div>
+            <div class="blessing-footer">点击按钮切换祝福 • 共 <span id="totalCount">0</span> 条</div>
         </div>
     </div>
 
     <script>
+        // 祝福数据
+        const blessings = [
+            {
+                icon: "🎄",
+                title: "温暖如初的祝福",
+                message: "亲爱的脆脆虾，\n\n今晚的雪是圣诞老人撒的糖霜吧？\n愿你的围巾永远裹着热可可的温度，\n袜子藏着比姜饼人更甜的惊喜——\n平安夜的每一秒，\n都要像咬开奶盖蛋糕那样，\n软乎乎、甜滋滋的✨。"
+            },
+            {
+                icon: "🎁",
+                title: "好运满满的约定",
+                message: "脆脆虾请注意！\n\n圣诞老人刚跟我告密：\n你今年的好运值已经满格啦～\n今晚要多吃一颗草莓\n（因为红得像圣诞帽），\n多笑一声\n（因为笑声比铃铛还好听），\n毕竟——这么可爱的你，\n值得全世界把温柔都打包塞进你的圣诞袜呀🎁！"
+            },
+            {
+                icon: "🌟",
+                title: "星辰下的祝愿",
+                message: "平安夜的风掠过屋顶时，\n我正对着星星写祝福——\n想写给那个总把日子过得像小太阳的脆脆虾：\n\n愿你案头的台灯，照过论文也照过晚霞；\n愿你的冰箱里，永远有吃不完的橘子糖；\n愿你遇见的每一个人，\n都像圣诞树上的星星，\n不刺眼却始终明亮🌟。"
+            },
+            {
+                icon: "🍪",
+                title: "喜欢你....",
+                message: "嘿脆脆虾，平安夜不许熬夜哦！\n\n不然圣诞老人的驯鹿会踩碎你床头的小饼干——\n不过偷偷告诉你：\n我已经跟他说好啦，\n要给你的枕头底下放一份\n\"不劳而获的快乐\"：\n比如明天醒来，\n窗外的阳光比往常更软，\n手机里的消息比往常更暖～🦌\n\n还有还有，\n你爱吃鱼，\n像小猫咪吃尽骨头——\n那我也把祝福藏进风里：\n明年春天要去看樱花，\n夏天要吃冰粉，\n秋天要捡银杏叶，\n冬天……冬天想和你一起度过🍪！"
+            },
+            {
+                icon: "💫",
+                title: "简单的小确幸",
+                message: "脆脆虾，平安夜快乐——\n\n愿你今天的甜，比奶茶里的珍珠还多一颗。\n圣诞树为你亮着灯，\n我为你攒着\"不用急着长大\"的勇气，\n今晚要睡个满是星星的好觉哦🌙。\n\n平安夜的魔法很简单：\n你笑的时候，\n连雪都变成了棉花糖味——\n脆脆虾，要一直这么甜呀🍬💫。"
+            },
+            {
+                icon: "🎅",
+                title: "来自圣诞老人的祝福",
+                message: "亲爱的廖翠霞小朋友：\n\n我是骑着驯鹿的圣诞老人～\n今年我在你的圣诞袜里\n偷偷放了六样东西：\n\n第一样是\"每天开心\"的魔法，\n第二样是\"想吃就吃\"的勇气，\n第三样是\"被人疼爱\"的运气，\n第四样是\"心想事成\"的愿望，\n第五样是\"永远可爱\"的秘诀，\n第六样是……\n我对你满满的想念呀🎅！\n\n愿你今夜好眠，\n梦里都是甜甜的糖果味～"
+            }
+        ];
+
+        let currentBlessingIndex = 0;
+
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             createSnowflakes();
-            // 移除自动显示测试（原注释代码）
-            // setTimeout(showFullBlessing, 3000);
+            initProgressDots();
         });
 
         // 创建雪花效果
@@ -300,28 +424,76 @@
             }
         }
 
-        // 显示全屏祝福
-        function showFullBlessing() {
-            const fullScreenBlessing = document.getElementById('fullScreenBlessing');
-            const blessingTextFull = document.getElementById('blessingTextFull');
+        // 初始化进度点
+        function initProgressDots() {
+            const dotsContainer = document.getElementById('progressDots');
+            const totalCount = document.getElementById('totalCount');
             
-            blessingTextFull.innerHTML = `
-                <p style="margin-bottom: 20px; color: #ff6b6b;">✨ 平安夜特别祝福 ✨</p>
-                <p style="margin-bottom: 15px;">亲爱的廖翠霞，愿这个平安夜像你最爱的蒸鱼一样温暖～</p>
-                <p style="margin-bottom: 15px;">愿你的生活充满欢乐，能够实现自己的理想！</p>
-                <p style="margin-bottom: 15px;">愿你平平安安，身体健健康康！</p>
-                <p style="margin-bottom: 15px;">愿你每一天都比前一天更加精彩！</p>
-                <p style="margin-top: 30px; font-weight: bold; color: #4CAF50;">来自林翔的专属祝福</p>
-            `;
+            totalCount.textContent = blessings.length;
             
-            fullScreenBlessing.classList.add('show');
-            setTimeout(hideFullBlessing, 5000);
+            for (let i = 0; i < blessings.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i === 0) dot.classList.add('active');
+                dotsContainer.appendChild(dot);
+            }
         }
 
-        // 隐藏全屏祝福
-        function hideFullBlessing() {
-            document.getElementById('fullScreenBlessing').classList.remove('show');
+        // 打开祝福滑块
+        function openBlessingSlider() {
+            const popup = document.getElementById('blessingPopup');
+            popup.classList.add('active');
+            showBlessing(0);
         }
+
+        // 关闭祝福滑块
+        function closeBlessingSlider() {
+            const popup = document.getElementById('blessingPopup');
+            popup.classList.remove('active');
+        }
+
+        // 显示指定索引的祝福
+        function showBlessing(index) {
+            if (index < 0 || index >= blessings.length) return;
+            
+            currentBlessingIndex = index;
+            const blessing = blessings[index];
+            
+            document.getElementById('blessingIcon').textContent = blessing.icon;
+            document.getElementById('blessingTitle').textContent = blessing.title;
+            document.getElementById('blessingMessage').textContent = blessing.message;
+            
+            // 更新进度点
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        // 下一条祝福
+        function nextBlessing() {
+            let nextIndex = currentBlessingIndex + 1;
+            if (nextIndex >= blessings.length) {
+                nextIndex = 0; // 循环到第一条
+            }
+            showBlessing(nextIndex);
+        }
+
+        // 上一条祝福
+        function prevBlessing() {
+            let prevIndex = currentBlessingIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = blessings.length - 1; // 循环到最后一条
+            }
+            showBlessing(prevIndex);
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('blessingPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBlessingSlider();
+            }
+        });
     </script>
 </body>
 </html>
